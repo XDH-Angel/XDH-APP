@@ -1,0 +1,404 @@
+﻿<Window x:Class="LandscapeRevitAddIn.UI.Windows.Panel02.MultipleLinesLevelsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="XD Landscape - Multiple Lines and Levels" Height="650" Width="900"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="White"
+        WindowStyle="SingleBorderWindow"
+        MinHeight="550" MinWidth="700">
+
+    <Window.Resources>
+        <!-- Logo-Inspired Gradient Background -->
+        <LinearGradientBrush x:Key="LogoGradientBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#B8D4C0" Offset="0"/>
+            <GradientStop Color="#A8C9B3" Offset="0.3"/>
+            <GradientStop Color="#8FBB9A" Offset="0.6"/>
+            <GradientStop Color="#7AAE85" Offset="0.8"/>
+            <GradientStop Color="#6BA177" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Subtle Card Background with slight transparency to show gradient -->
+        <SolidColorBrush x:Key="CardBackground" Color="#FEFEFE" Opacity="0.95"/>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#4A7C5A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3D6349"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5A8C6A"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#3A5C45"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Primary Action Button -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#2D5D3A"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A7C5A"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Selection Button Style -->
+        <Style x:Key="SelectionButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#5A8C6A"/>
+            <Setter Property="BorderBrush" Value="#4A7C5A"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#6A9C7A"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#4A7C5A"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Updated Card Style with subtle transparency -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="#C8DDD0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="8" Opacity="0.15" Color="#4A7C5A"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ListBox Style -->
+        <Style x:Key="ModernListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#C8DDD0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                            <ScrollViewer Padding="4">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}"
+                                            CornerRadius="3">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E8F4EB"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#D4E8D8"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                <Setter Property="BorderBrush" Value="#4A7C5A"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Status Text Styles with Green Theme -->
+        <Style x:Key="SuccessText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#2D5D3A"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="ErrorText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#C85450"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="InfoText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#5A8C6A"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
+
+        <!-- Preview Area Style -->
+        <Style x:Key="PreviewArea" TargetType="Border">
+            <Setter Property="Background" Value="#F8FBF9"/>
+            <Setter Property="BorderBrush" Value="#C8DDD0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource LogoGradientBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource Card}" Margin="20,20,20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo -->
+                <Border Grid.Column="0" Width="72" Height="72"
+                        VerticalAlignment="Center" Margin="0,0,20,0">
+                    <Border.Background>
+                        <ImageBrush x:Name="LogoBrush" Stretch="Uniform"/>
+                    </Border.Background>
+                </Border>
+
+                <!-- Title and Info -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="XD Landscape"
+                               FontSize="24" FontWeight="Bold" Foreground="#2D5D3A"
+                               Margin="0,0,0,5"/>
+                    <TextBlock Text="Multiple Lines and Levels"
+                               FontSize="16" Foreground="#4A7C5A" Margin="0,0,0,2"/>
+                    <TextBlock Text="Modify floor levels based on selected lines and reference levels"
+                               FontSize="11" Foreground="#5A8C6A"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Selection Controls -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="20,10,20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column - Floor and Line Selection -->
+                <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Element Selection" 
+                                   FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1" Text="Select floors and reference lines"
+                                   FontSize="11" Style="{StaticResource InfoText}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Button x:Name="SelectFloorsButton" Content="🏗️ Select Floors"
+                            Style="{StaticResource SelectionButton}" Height="42" Margin="0,0,0,10"
+                            Click="SelectFloorsButton_Click"/>
+
+                    <Button x:Name="SelectLinesButton" Content="📐 Select Reference Lines"
+                            Style="{StaticResource SelectionButton}" Height="42" Margin="0,0,0,15"
+                            Click="SelectLinesButton_Click"/>
+
+                    <Border Background="#F8FBF9" BorderBrush="#C8DDD0" BorderThickness="1" 
+                            CornerRadius="4" Padding="12,8">
+                        <TextBlock x:Name="SelectionStatusTextBlock"
+                                   Text="No floors or lines selected"
+                                   FontSize="11" Style="{StaticResource InfoText}"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column - Reference Levels -->
+                <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Reference Levels" 
+                                   FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1" Text="Available project levels"
+                                   FontSize="11" Style="{StaticResource InfoText}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <Border Style="{StaticResource PreviewArea}" MinHeight="160">
+                        <ScrollViewer MaxHeight="200" VerticalScrollBarVisibility="Auto" Padding="4">
+                            <ListBox x:Name="LevelsListBox" Style="{StaticResource ModernListBox}" BorderThickness="0">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Margin="4,2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Level Icon -->
+                                            <Border Grid.Column="0" Width="18" Height="18" 
+                                                    Background="#E8F4EB" CornerRadius="2"
+                                                    Margin="0,0,8,0">
+                                                <TextBlock Text="📏" FontSize="10" 
+                                                           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+
+                                            <!-- Level Name -->
+                                            <TextBlock Grid.Column="1" Text="{Binding Name}" 
+                                                       FontSize="12" Foreground="#2D5D3A"
+                                                       VerticalAlignment="Center"/>
+
+                                            <!-- Level Elevation -->
+                                            <TextBlock Grid.Column="2" Text="{Binding Elevation, StringFormat={}{0:F2} ft}" 
+                                                       FontSize="10" Style="{StaticResource InfoText}"
+                                                       Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Preview Area -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="20,10,20,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Floor Modification Preview"
+                               FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                               VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" Text="Live preview of changes"
+                               FontSize="11" Style="{StaticResource InfoText}"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <Border Grid.Row="1" Style="{StaticResource PreviewArea}" MinHeight="200">
+                    <Grid>
+                        <!-- Background Pattern -->
+                        <Canvas Background="Transparent">
+                            <Rectangle Width="20" Height="20" Fill="#E8F4EB" Opacity="0.3"
+                                       Canvas.Left="20" Canvas.Top="20"/>
+                            <Rectangle Width="20" Height="20" Fill="#E8F4EB" Opacity="0.3"
+                                       Canvas.Left="60" Canvas.Top="40"/>
+                            <Rectangle Width="20" Height="20" Fill="#E8F4EB" Opacity="0.3"
+                                       Canvas.Left="100" Canvas.Top="60"/>
+                        </Canvas>
+
+                        <!-- Center Content -->
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="📊 Modification Preview" FontSize="18" 
+                                       Foreground="#A8C9B3" FontWeight="SemiBold" 
+                                       HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                            <TextBlock Text="Select floors, lines, and levels to see modification preview"
+                                       FontSize="12" Style="{StaticResource InfoText}"
+                                       HorizontalAlignment="Center" TextWrapping="Wrap"
+                                       MaxWidth="300" TextAlignment="Center"/>
+                            <TextBlock Text="Changes will be calculated and displayed here in real-time"
+                                       FontSize="10" Foreground="#7AAE85"
+                                       HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Footer with Actions -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Margin="20,10,20,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Summary -->
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock x:Name="SummaryTextBlock"
+                               FontWeight="SemiBold" FontSize="14" Foreground="#2D5D3A"
+                               Text="Select floors, lines, and levels to continue"/>
+                    <TextBlock Text="Floor levels will be adjusted based on the reference lines and selected levels"
+                               FontSize="11" Foreground="#4A7C5A" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button x:Name="CancelButton" Content="Cancel"
+                            Style="{StaticResource ModernButton}"
+                            Width="90" Height="38" Margin="0,0,12,0"
+                            Click="CancelButton_Click"/>
+
+                    <Button x:Name="ApplyButton" Content="📐 Apply Changes"
+                            Style="{StaticResource PrimaryButton}"
+                            Width="150" Height="38" IsEnabled="False"
+                            Click="ApplyButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

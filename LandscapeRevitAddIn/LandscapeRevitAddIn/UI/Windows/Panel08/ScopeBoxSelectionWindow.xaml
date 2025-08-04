@@ -1,0 +1,576 @@
+﻿<Window x:Class="LandscapeRevitAddIn.UI.Windows.Panel08.ScopeBoxSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="XD Landscape - Create Sheets by Scope Box" Height="650" Width="750"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="White"
+        WindowStyle="SingleBorderWindow">
+
+    <Window.Resources>
+        <!-- Logo-Inspired Gradient Background -->
+        <LinearGradientBrush x:Key="LogoGradientBackground" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#B8D4C0" Offset="0"/>
+            <GradientStop Color="#A8C9B3" Offset="0.3"/>
+            <GradientStop Color="#8FBB9A" Offset="0.6"/>
+            <GradientStop Color="#7AAE85" Offset="0.8"/>
+            <GradientStop Color="#6BA177" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Subtle Card Background with slight transparency to show gradient -->
+        <SolidColorBrush x:Key="CardBackground" Color="#FEFEFE" Opacity="0.95"/>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#4A7C5A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#3D6349"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#5A8C6A"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Background" Value="#3A5C45"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                    <Setter Property="Cursor" Value="Arrow"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Primary Action Button -->
+        <Style x:Key="PrimaryButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#2D5D3A"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A7C5A"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#CCCCCC"/>
+                    <Setter Property="Foreground" Value="#666666"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Modern ComboBox Style with Green Accents -->
+        <Style x:Key="ModernComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#A8C9B3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border Name="Border" 
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="4"/>
+                            <ToggleButton Name="ToggleButton" 
+                                        Grid.Column="2" 
+                                        Focusable="false"
+                                        IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                        ClickMode="Press"
+                                        Background="Transparent"
+                                        BorderThickness="0">
+                                <Path Name="Arrow"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Data="M 0 0 L 4 4 L 8 0 Z"
+                                      Fill="#4A7C5A" />
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                            IsHitTestVisible="False" 
+                                            Content="{TemplateBinding SelectionBoxItem}"
+                                            ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                            ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                            Margin="10,0,25,0"
+                                            VerticalAlignment="Center"
+                                            HorizontalAlignment="Left" />
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"                
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border Name="DropDownBorder"
+                                            Background="White"
+                                            BorderThickness="1"
+                                            BorderBrush="#A8C9B3"
+                                            CornerRadius="4"/>
+                                    <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#4A7C5A"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2D5D3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Padding" Value="10,6"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="MinHeight" Value="28"/>
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E8F4EB"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#D4E8D8"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#A8C9B3"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Name="Border" 
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#4A7C5A"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#2D5D3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern CheckBox Style -->
+        <Style x:Key="ModernCheckBox" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#2D5D3A"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Border Grid.Column="0" Name="checkBorder" 
+                                    Width="16" Height="16" 
+                                    BorderBrush="#A8C9B3" BorderThickness="1.5"
+                                    Background="White" CornerRadius="3">
+                                <Path Name="checkMark" 
+                                      Data="M 2 6 L 6 10 L 14 2" 
+                                      Stroke="#2D5D3A" StrokeThickness="2"
+                                      Visibility="Collapsed"/>
+                            </Border>
+
+                            <ContentPresenter Grid.Column="1" 
+                                            Margin="{TemplateBinding Padding}"
+                                            VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="checkBorder" Property="Background" Value="#E8F4EB"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="checkBorder" Property="BorderBrush" Value="#4A7C5A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Updated Card Style with subtle transparency -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackground}"/>
+            <Setter Property="BorderBrush" Value="#C8DDD0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="8" Opacity="0.15" Color="#4A7C5A"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ListBox Style -->
+        <Style x:Key="ModernListBox" TargetType="ListBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#C8DDD0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                            <ScrollViewer Padding="{TemplateBinding Padding}">
+                                <ItemsPresenter/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Padding" Value="6,4"/>
+                        <Setter Property="Margin" Value="2"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}"
+                                            CornerRadius="3">
+                                        <ContentPresenter/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E8F4EB"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#D4E8D8"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Status Text Styles with Green Theme -->
+        <Style x:Key="SuccessText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#2D5D3A"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="ErrorText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#C85450"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="InfoText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#5A8C6A"/>
+            <Setter Property="FontStyle" Value="Italic"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource LogoGradientBackground}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource Card}" Margin="20,20,20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Logo -->
+                <Border Grid.Column="0" Width="72" Height="72"
+                        VerticalAlignment="Center" Margin="0,0,20,0">
+                    <Border.Background>
+                        <ImageBrush x:Name="LogoBrush" Stretch="Uniform"/>
+                    </Border.Background>
+                </Border>
+
+                <!-- Title and Info -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="XD Landscape"
+                               FontSize="24" FontWeight="Bold" Foreground="#2D5D3A"
+                               Margin="0,0,0,5"/>
+                    <TextBlock Text="Create Sheets Based on Scope Boxes"
+                               FontSize="14" Foreground="#4A7C5A"/>
+                    <TextBlock Text="Automatically generate plan sheets using scope box boundaries for precise drawing layouts"
+                               FontSize="11" Foreground="#5A8C6A" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Configuration Section -->
+        <Border Grid.Row="1" Style="{StaticResource Card}" Margin="20,10,20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Title Block Selection -->
+                <StackPanel Grid.Column="0" Margin="0,0,15,0">
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Title Block Selection"
+                                   FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1" Text="Choose sheet template"
+                                   FontSize="11" Style="{StaticResource InfoText}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <ComboBox Name="TitleBlockComboBox"
+                              Style="{StaticResource ModernComboBox}"
+                              Height="35"
+                              DisplayMemberPath="Name"
+                              SelectionChanged="TitleBlockComboBox_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📄" FontSize="12" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" FontSize="12" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Name="TitleBlockInfoText"
+                               Text="Select a title block type for the new sheets"
+                               Style="{StaticResource InfoText}"
+                               Margin="0,8,0,0"/>
+                </StackPanel>
+
+                <!-- Sheet Naming Options -->
+                <StackPanel Grid.Column="1" Margin="15,0,0,0">
+                    <Grid Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Sheet Naming Configuration"
+                                   FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                                   VerticalAlignment="Center"/>
+
+                        <TextBlock Grid.Column="1" Text="Customize sheet names"
+                                   FontSize="11" Style="{StaticResource InfoText}"
+                                   VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <StackPanel>
+                        <TextBlock Text="Sheet Number Prefix:" FontSize="12" 
+                                   Foreground="#2D5D3A" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                        <TextBox Name="SheetNumberPrefixTextBox" 
+                                Text="A" Height="32" 
+                                Style="{StaticResource ModernTextBox}"
+                                VerticalContentAlignment="Center"
+                                Margin="0,0,0,12"/>
+
+                        <CheckBox Name="IncludeScopeBoxNameCheckBox" 
+                                 Content="Include scope box name in sheet name"
+                                 Style="{StaticResource ModernCheckBox}"
+                                 IsChecked="True"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Scope Box Selection -->
+        <Border Grid.Row="2" Style="{StaticResource Card}" Margin="20,10,20,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Scope Box Selection"
+                               FontSize="16" FontWeight="SemiBold" Foreground="#2D5D3A"
+                               VerticalAlignment="Center"/>
+
+                    <TextBlock Grid.Column="1" Text="Choose drawing boundaries"
+                               FontSize="11" Style="{StaticResource InfoText}"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Selection Controls -->
+                <Grid Grid.Row="1" Margin="0,0,0,12">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Name="SelectAllButton" Content="✓ Select All"
+                            Grid.Column="0"
+                            Style="{StaticResource ModernButton}"
+                            Width="90" Height="32" Margin="0,0,8,0"
+                            Click="SelectAllButton_Click"/>
+                    <Button Name="DeselectAllButton" Content="✗ Deselect All"
+                            Grid.Column="1"
+                            Style="{StaticResource ModernButton}"
+                            Width="100" Height="32"
+                            Click="DeselectAllButton_Click"/>
+
+                    <Border Grid.Column="2" Background="#F8FBF9" BorderBrush="#C8DDD0" 
+                            BorderThickness="1" CornerRadius="4" Padding="12,6" Margin="12,0,0,0">
+                        <TextBlock Name="SelectionCountText"
+                                   Text="0 scope boxes selected"
+                                   VerticalAlignment="Center"
+                                   FontSize="12" Style="{StaticResource InfoText}"/>
+                    </Border>
+                </Grid>
+
+                <!-- Scope Boxes List -->
+                <Border Grid.Row="2" BorderBrush="#C8DDD0" BorderThickness="1" 
+                        CornerRadius="4" Background="White">
+                    <ListBox Name="ScopeBoxesListBox"
+                             Style="{StaticResource ModernListBox}"
+                             BorderThickness="0"
+                             SelectionMode="Multiple"
+                             MinHeight="200"
+                             SelectionChanged="ScopeBoxesListBox_SelectionChanged">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="6,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Checkbox -->
+                                    <CheckBox Grid.Column="0" Name="ScopeBoxCheckBox" 
+                                             IsChecked="{Binding IsSelected}"
+                                             Style="{StaticResource ModernCheckBox}"
+                                             Margin="0,0,10,0"
+                                             Checked="ScopeBoxCheckBox_Changed"
+                                             Unchecked="ScopeBoxCheckBox_Changed"/>
+
+                                    <!-- Scope Box Icon -->
+                                    <Border Grid.Column="1" Width="20" Height="20" 
+                                            Background="#E8F4EB" CornerRadius="2"
+                                            Margin="0,0,10,0">
+                                        <TextBlock Text="📐" FontSize="10" 
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+
+                                    <!-- Scope Box Info -->
+                                    <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" 
+                                                  FontWeight="SemiBold" FontSize="12" 
+                                                  Foreground="#2D5D3A"/>
+                                        <TextBlock Text="{Binding Description}" 
+                                                  FontSize="10" Style="{StaticResource InfoText}"
+                                                  Margin="0,1,0,0"/>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Footer -->
+        <Border Grid.Row="3" Style="{StaticResource Card}" Margin="20,10,20,20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Summary -->
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Name="SummaryTextBlock"
+                               FontWeight="SemiBold" FontSize="14" Foreground="#2D5D3A"
+                               Text="Select scope boxes and title block to create sheets"/>
+                    <TextBlock Text="Each selected scope box will generate a new sheet with the chosen title block and naming convention"
+                               FontSize="11" Foreground="#4A7C5A" Margin="0,2,0,0"/>
+                </StackPanel>
+
+                <!-- Action Buttons -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Name="CancelButton" Content="Cancel"
+                            Style="{StaticResource ModernButton}"
+                            Width="90" Height="38" Margin="0,0,12,0"
+                            Click="CancelButton_Click"/>
+
+                    <Button Name="CreateSheetsButton" Content="📄 Create Sheets"
+                            Style="{StaticResource PrimaryButton}"
+                            Width="140" Height="38"
+                            Click="CreateSheetsButton_Click" IsEnabled="False"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
