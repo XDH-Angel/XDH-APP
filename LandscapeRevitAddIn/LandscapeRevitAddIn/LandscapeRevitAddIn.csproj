@@ -1,0 +1,349 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ECDD1523-B17A-4625-8035-EF6E1DD0D95C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LandscapeRevitAddIn</RootNamespace>
+    <AssemblyName>LandscapeRevitAddIn</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdWindows, Version=5.0.3.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2024.0.0\lib\net48\AdWindows.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="RevitAPI, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2024.0.0\lib\net48\RevitAPI.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2024.0.0\lib\net48\RevitAPIUI.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UIFramework, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <HintPath>..\packages\Revit_All_Main_Versions_API_x64.2024.0.0\lib\net48\UIFramework.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Application.cs" />
+    <Compile Include="Commands\Panel01\FloorLayoutCommand.cs" />
+    <Compile Include="Commands\Panel01\TreesCommand.cs" />
+    <Compile Include="Commands\Panel02\ElementsLevelCommand.cs" />
+    <Compile Include="Commands\Panel02\FloorsLevelCommand.cs" />
+    <Compile Include="Commands\Panel02\MultipleLinesLevelsCommand.cs" />
+    <Compile Include="Commands\Panel02\SlopeByLinesCommand.cs" />
+    <Compile Include="Commands\Panel02\WallsLevelCommand.cs" />
+    <Compile Include="Commands\Panel03\FloorBandCommand.cs" />
+    <Compile Include="Commands\Panel03\GeoFamCommand.cs" />
+    <Compile Include="Commands\Panel03\VisRefCommand.cs" />
+    <Compile Include="Commands\Panel04\GraphMoundCommand.cs" />
+    <Compile Include="Commands\Panel04\LineMoundCommand.cs" />
+    <Compile Include="Commands\Panel04\TopoMoundCommand.cs" />
+    <Compile Include="Commands\Panel05\CadPointsCommand.cs" />
+    <Compile Include="Utils\SurfaceAlignmentUtils.cs" />
+    <Compile Include="Commands\Panel05\SurfaceCommand.cs" />
+    <Compile Include="Commands\Panel05\SlopeValueCommand.cs" />
+    <Compile Include="Commands\Panel06\BySurfaceCommand.cs" />
+    <Compile Include="Commands\Panel06\TwoEdgeCommand.cs" />
+    <Compile Include="Commands\Panel06\OneEdgeCommand.cs" />
+    <Compile Include="Commands\Panel07\PointToSurfaceCommand.cs" />
+    <Compile Include="Commands\Panel07\PointToEdgeCommand.cs" />
+    <Compile Include="Commands\Panel07\PointByTwoEdgesCommand.cs" />
+    <Compile Include="Commands\Panel08\AnnotationCommand.cs" />
+    <Compile Include="Commands\Panel08\CreateSheetsByScopeBoxCommand.cs" />
+    <Compile Include="Commands\Panel08\FilledRegionByFaceCommand.cs" />
+    <Compile Include="Models\LayerFloorMapping.cs" />
+    <Compile Include="Models\LayerFamilyMapping.cs" />
+    <Compile Include="Models\LevelAdjustmentData.cs" />
+    <Compile Include="Models\MultipleLinesLevelsData.cs" />
+    <Compile Include="Models\SlopeByLinesData.cs" />
+    <Compile Include="Models\WallAdjustmentData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UI\Windows\Panel03\FloorBandWindow.xaml.cs">
+      <DependentUpon>FloorBandWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel03\GeoFamWindow.xaml.cs">
+      <DependentUpon>GeoFamWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel03\VisRefWindow.xaml.cs">
+      <DependentUpon>VisRefWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel04\GraphMoundWindow.xaml.cs">
+      <DependentUpon>GraphMoundWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel04\LineMoundWindow.xaml.cs">
+      <DependentUpon>LineMoundWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel04\TopoMoundWindow.xaml.cs">
+      <DependentUpon>TopoMoundWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel05\CadPointsWindow.xaml.cs">
+      <DependentUpon>CadPointsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel05\SlopeValueWindow.xaml.cs">
+      <DependentUpon>SlopeValueWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel05\SurfaceWindow.xaml.cs">
+      <DependentUpon>SurfaceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel06\OneEdgeWindow.xaml.cs">
+      <DependentUpon>OneEdgeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel06\TwoEdgeWindow.xaml.cs">
+      <DependentUpon>TwoEdgeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel06\BySurfaceWindow.xaml.cs">
+      <DependentUpon>BySurfaceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel07\PointToSurfaceWindow.xaml.cs">
+      <DependentUpon>PointToSurfaceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel07\PointToEdgeWindow.xaml.cs">
+      <DependentUpon>PointToEdgeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel07\PointByTwoEdgesWindow.xaml.cs">
+      <DependentUpon>PointByTwoEdgesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel08\AnnotationSettingsWindow.xaml.cs">
+      <DependentUpon>AnnotationSettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel08\FilledRegionByFaceWindow.xaml.cs">
+      <DependentUpon>FilledRegionByFaceWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel01\FloorLayoutWindow.xaml.cs">
+      <DependentUpon>FloorLayoutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel02\LevelAdjustmentWindow.xaml.cs">
+      <DependentUpon>LevelAdjustmentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel02\MultipleLinesLevelsWindow.xaml.cs">
+      <DependentUpon>MultipleLinesLevelsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel08\ScopeBoxSelectionWindow.xaml.cs">
+      <DependentUpon>ScopeBoxSelectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel02\SlopeByLinesWindow.xaml.cs">
+      <DependentUpon>SlopeByLinesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel01\TreesWindow.xaml.cs">
+      <DependentUpon>TreesWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Windows\Panel02\WallAdjustmentWindow.xaml.cs">
+      <DependentUpon>WallAdjustmentWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\P6FloorUtils.cs" />
+    <Compile Include="Utils\P5FloorUtils.cs" />
+    <Compile Include="Utils\P5CADUtils.cs" />
+    <Compile Include="Utils\CADUtils.cs" />
+    <Compile Include="Utils\FloorUtils.cs" />
+    <Compile Include="Utils\FamilyUtils.cs" />
+    <Compile Include="Utils\PSCADUtils.cs" />
+    <Compile Include="Utils\PSFloorUtils.cs" />
+    <Compile Include="Utils\RevitUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LandscapeRevitAddIn.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\XDHouse_Logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Windows\Panel03\FloorBandWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel03\GeoFamWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel03\VisRefWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel04\GraphMoundWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel04\LineMoundWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel04\TopoMoundWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel05\CadPointsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel05\SlopeValueWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel05\SurfaceWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel06\OneEdgeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel06\TwoEdgeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel06\BySurfaceWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel07\PointToSurfaceWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel07\PointToEdgeWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel07\PointByTwoEdgesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel08\AnnotationSettingsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel08\FilledRegionByFaceWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel02\LevelAdjustmentWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel02\MultipleLinesLevelsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel08\ScopeBoxSelectionWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\Windows\Panel02\SlopeByLinesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel01\TreesWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\Windows\Panel02\WallAdjustmentWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\Panel01\Trees_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel01\Trees_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="UI\Windows\Panel01\FloorLayoutWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\Panel01\FloorLayout_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel01\FloorLayout_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\ElementsLevel_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\ElementsLevel_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\FloorsLevel_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\FloorsLevel_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\MultipleLinesLevels_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\MultipleLinesLevels_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\SlopeByLines_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\SlopeByLines_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\WallsLevel_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel02\WallsLevel_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\Annotation_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\Annotation_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\CreateSheetsByScopeBox_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\CreateSheetsByScopeBox_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\FilledRegionByFace_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel08\FilledRegionByFace_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Images\" />
+    <Folder Include="UI\Windows\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Icons\Panel03\FloorBand_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel03\FloorBand_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel03\GeoFam_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel03\GeoFam_32.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel03\VisRef_16.png" />
+    <EmbeddedResource Include="Resources\Icons\Panel03\VisRef_32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Icons\Panel04\GraphMound_16.png" />
+    <Content Include="Resources\Icons\Panel04\GraphMound_32.png" />
+    <Content Include="Resources\Icons\Panel04\LineMound_16.png" />
+    <Content Include="Resources\Icons\Panel04\LineMound_32.png" />
+    <Content Include="Resources\Icons\Panel04\TopoMound_16.png" />
+    <Content Include="Resources\Icons\Panel04\TopoMound_32.png" />
+    <Content Include="Resources\Icons\Panel05\CadPoints_16.png" />
+    <Content Include="Resources\Icons\Panel05\CadPoints_32.png" />
+    <Content Include="Resources\Icons\Panel05\SlopeValue_16.png" />
+    <Content Include="Resources\Icons\Panel05\SlopeValue_32.png" />
+    <Content Include="Resources\Icons\Panel05\Surface_16.png" />
+    <Content Include="Resources\Icons\Panel05\Surface_32.png" />
+    <Content Include="Resources\Icons\Panel06\BySurface_16.png" />
+    <Content Include="Resources\Icons\Panel06\BySurface_32.png" />
+    <Content Include="Resources\Icons\Panel06\OneEdge_16.png" />
+    <Content Include="Resources\Icons\Panel06\OneEdge_32.png" />
+    <Content Include="Resources\Icons\Panel06\TwoEdge_16.png" />
+    <Content Include="Resources\Icons\Panel06\TwoEdge_32.png" />
+    <Content Include="Resources\Icons\Panel07\PointToSurface_16.png" />
+    <Content Include="Resources\Icons\Panel07\PointToSurface_32.png" />
+    <Content Include="Resources\Icons\Panel07\PointToEdge_16.png" />
+    <Content Include="Resources\Icons\Panel07\PointToEdge_32.png" />
+    <Content Include="Resources\Icons\Panel07\PointByTwoEdges_16.png" />
+    <Content Include="Resources\Icons\Panel07\PointByTwoEdges_32.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
